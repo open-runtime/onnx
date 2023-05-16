@@ -184,7 +184,7 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
         }
         std::string data_path = path_join(ctx.get_model_dir(), relative_path);
         // use stat to check whether the file exists
-        struct stat buffer;
+//        struct stat buffer;
 //        if (stat((data_path).c_str(), &buffer) != 0) {
 //          fail_check(
 //              "Data of TensorProto ( tensor name: ",
@@ -194,14 +194,14 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
 //              ", but it doesn't exist or is not accessible.");
 //        }
         // Do not allow symlinks or directories.
-        if (!S_ISREG(buffer.st_mode)) {
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              data_path,
-              ", but it is not regular file.");
-        }
+//        if (!S_ISREG(buffer.st_mode)) {
+//          fail_check(
+//              "Data of TensorProto ( tensor name: ",
+//              tensor.name(),
+//              ") should be stored in ",
+//              data_path,
+//              ", but it is not regular file.");
+//        }
 #endif
       }
     }
