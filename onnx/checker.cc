@@ -150,8 +150,8 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
               entry.value(),
               "' points outside the directory");
         }
-        std::wstring data_path = path_join(utf8str_to_wstring(ctx.get_model_dir()), relative_path);
-        struct _stat buff;
+//        std::wstring data_path = path_join(utf8str_to_wstring(ctx.get_model_dir()), relative_path);
+//        struct _stat buff;
 //        if (_wstat(data_path.c_str(), &buff) != 0) {
 //          fail_check(
 //              "Data of TensorProto ( tensor name: ",
@@ -159,7 +159,7 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
 //              ") should be stored in ",
 //              entry.value(),
 //              ", but it doesn't exist or is not accessible.");
-        }
+//        }
 #else // POSIX
         if (entry.value().empty()) {
           fail_check("Location of external TensorProto ( tensor name: ", tensor.name(), ") should not be empty.");
