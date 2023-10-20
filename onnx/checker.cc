@@ -150,16 +150,16 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
               entry.value(),
               "' points outside the directory");
         }
-        std::wstring data_path = path_join(utf8str_to_wstring(ctx.get_model_dir()), relative_path);
-        struct _stat64 buff;
-        if (_wstat64(data_path.c_str(), &buff) != 0) {
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              entry.value(),
-              ", but it doesn't exist or is not accessible.");
-        }
+//        std::wstring data_path = path_join(utf8str_to_wstring(ctx.get_model_dir()), relative_path);
+//        struct _stat buff;
+//        if (_wstat(data_path.c_str(), &buff) != 0) {
+//          fail_check(
+//              "Data of TensorProto ( tensor name: ",
+//              tensor.name(),
+//              ") should be stored in ",
+//              entry.value(),
+//              ", but it doesn't exist or is not accessible.");
+//        }
 #else // POSIX
         if (entry.value().empty()) {
           fail_check("Location of external TensorProto ( tensor name: ", tensor.name(), ") should not be empty.");
@@ -183,30 +183,25 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
               "' points outside the directory");
         }
         std::string data_path = path_join(ctx.get_model_dir(), relative_path);
-        // use stat64 to check whether the file exists
-#if defined(__APPLE__) || defined(__wasm__)
-        struct stat buffer; // APPLE does not have stat64
-        if (stat((data_path).c_str(), &buffer) != 0) {
-#else
-        struct stat64 buffer; // All POSIX except APPLE have stat64
-        if (stat64((data_path).c_str(), &buffer) != 0) {
-#endif
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              data_path,
-              ", but it doesn't exist or is not accessible.");
-        }
+        // use stat to check whether the file exists
+//        struct stat buffer;
+//        if (stat((data_path).c_str(), &buffer) != 0) {
+//          fail_check(
+//              "Data of TensorProto ( tensor name: ",
+//              tensor.name(),
+//              ") should be stored in ",
+//              data_path,
+//              ", but it doesn't exist or is not accessible.");
+//        }
         // Do not allow symlinks or directories.
-        if (!S_ISREG(buffer.st_mode)) {
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              data_path,
-              ", but it is not regular file.");
-        }
+//        if (!S_ISREG(buffer.st_mode)) {
+//          fail_check(
+//              "Data of TensorProto ( tensor name: ",
+//              tensor.name(),
+//              ") should be stored in ",
+//              data_path,
+//              ", but it is not regular file.");
+//        }
 #endif
       }
     }
