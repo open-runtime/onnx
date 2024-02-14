@@ -149,16 +149,6 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
               entry.value(),
               "' points outside the directory");
         }
-        std::wstring data_path = path_join(utf8str_to_wstring(ctx.get_model_dir()), relative_path);
-        struct _stat64 buff;
-        if (data_path.empty() || (data_path[0] != '#' && _wstat64(data_path.c_str(), &buff) != 0)) {
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              entry.value(),
-              ", but it doesn't exist or is not accessible.");
-        }
 #else // POSIX
         if (entry.value().empty()) {
           fail_check("Location of external TensorProto ( tensor name: ", tensor.name(), ") should not be empty.");
@@ -180,31 +170,6 @@ void check_tensor(const TensorProto& tensor, const CheckerContext& ctx) {
               ", but the '",
               entry.value(),
               "' points outside the directory");
-        }
-        std::string data_path = path_join(ctx.get_model_dir(), relative_path);
-        // use stat64 to check whether the file exists
-#if defined(__APPLE__) || defined(__wasm__) || !defined(__GLIBC__)
-        struct stat buffer; // APPLE, wasm and non-glic stdlibs do not have stat64
-        if (data_path.empty() || (data_path[0] != '#' && stat((data_path).c_str(), &buffer) != 0)) {
-#else
-        struct stat64 buffer; // All POSIX under glibc except APPLE and wasm have stat64
-        if (data_path.empty() || (data_path[0] != '#' && stat64((data_path).c_str(), &buffer) != 0)) {
-#endif
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              data_path,
-              ", but it doesn't exist or is not accessible.");
-        }
-        // Do not allow symlinks or directories.
-        if (data_path.empty() || (data_path[0] != '#' && !S_ISREG(buffer.st_mode))) {
-          fail_check(
-              "Data of TensorProto ( tensor name: ",
-              tensor.name(),
-              ") should be stored in ",
-              data_path,
-              ", but it is not regular file.");
         }
 #endif
       }
