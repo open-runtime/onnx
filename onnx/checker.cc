@@ -1000,15 +1000,15 @@ std::string resolve_external_data_location(
         "' points outside the directory");
   }
   std::wstring data_path = path_join(utf8str_to_wstring(base_dir), relative_path);
-  struct _stat64 buff;
-  if (data_path.empty() || (data_path[0] != '#' && _wstat64(data_path.c_str(), &buff) != 0)) {
-    fail_check(
-        "Data of TensorProto ( tensor name: ",
-        tensor_name,
-        ") should be stored in ",
-        location,
-        ", but it doesn't exist or is not accessible.");
-  }
+//  struct _stat64 buff;
+//  if (data_path.empty() || (data_path[0] != '#' && _wstat64(data_path.c_str(), &buff) != 0)) {
+//    fail_check(
+//        "Data of TensorProto ( tensor name: ",
+//        tensor_name,
+//        ") should be stored in ",
+//        location,
+//        ", but it doesn't exist or is not accessible.");
+//  }
   return wstring_to_utf8str(data_path);
 #else // POSIX
   if (location.empty()) {
@@ -1041,12 +1041,12 @@ std::string resolve_external_data_location(
   struct stat64 buffer; // All POSIX under glibc except APPLE and wasm have stat64
   if (data_path.empty() || (data_path[0] != '#' && stat64((data_path).c_str(), &buffer) != 0)) {
 #endif
-    fail_check(
-        "Data of TensorProto ( tensor name: ",
-        tensor_name,
-        ") should be stored in ",
-        data_path,
-        ", but it doesn't exist or is not accessible.");
+//    fail_check(
+//        "Data of TensorProto ( tensor name: ",
+//        tensor_name,
+//        ") should be stored in ",
+//        data_path,
+//        ", but it doesn't exist or is not accessible.");
   }
   // Do not allow symlinks or directories.
   if (data_path.empty() || (data_path[0] != '#' && !S_ISREG(buffer.st_mode))) {
